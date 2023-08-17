@@ -1,0 +1,33 @@
+.images {
+    display: flex;
+    align-items: flex-end;
+    /* padding-left: 20px; */
+}
+
+.images i {
+    padding-left: 30px;
+    font-size: 1.3rem;
+    color: #fff;
+}
+
+/* .header img {
+    padding-right: 30px;
+} */
+.search-bar {
+    display: flex;
+    width: 60%;
+}
+
+/* .header i {
+    padding-left: 30px;
+} */
+
+
+.p-button
+
+:host {
+    ::ng-deep .p-button {
+        margin: 0;
+        padding: 0;
+    }
+}

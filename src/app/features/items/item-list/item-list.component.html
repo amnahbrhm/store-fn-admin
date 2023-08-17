@@ -1,0 +1,41 @@
+<button pButton (click)="showDialog()" label="Add Product" class="p-button-success"></button>
+<!-- 
+<div class="flex justify-content-center mb-3">
+    <p-selectButton [options]="sizes" [(ngModel)]="selectedSize" [multiple]="false" optionLabel="name" optionValue="class"></p-selectButton>
+</div>
+<p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }" [styleClass]="selectedSize.class">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>
+            <td>{{ product.code }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.quantity }}</td>
+        </tr>
+    </ng-template>
+</p-table> -->
+
+<p-dialog header="Header" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+    [draggable]="false" [resizable]="false">
+    <form [formGroup]="form">
+        <input pInputText type="text" formControlName="name" placeholder="Normal" />
+
+        <input pInputText type="text" formControlName="description" placeholder="Normal" />
+
+        <input pInputText type="text" formControlName="price" placeholder="Normal" />
+        <input pInputText type="text" formControlName="quantity" placeholder="Normal" />
+        <!-- <input pInputText type="file" img="price" placeholder="Normal" /> -->
+
+        <p-fileUpload mode="basic" accept="image/*"  (onUpload)="onBasicUploadAuto($event)"
+            [auto]="false" chooseLabel="Browse"></p-fileUpload>
+    </form>
+    <button pButton (click)="submit()" label="Add Product" class="p-button-success"></button>
+
+</p-dialog>

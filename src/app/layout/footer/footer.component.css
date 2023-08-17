@@ -1,0 +1,8 @@
+:host {
+
+    ::ng-deep .p-button .p-button-secondary {
+        margin: 0;
+        padding: 0;
+        color: #fff;
+    }
+}

@@ -1,0 +1,61 @@
+.sidebar {
+    position: fixed;
+    /* top: 90rem; */
+    left: 0;
+    height: 100vh;
+    width: 200px;
+    color: #fff;
+    background: black;
+    /* box-shadow: 0px -6px 15px rgba(114, 116, 137, 0.1); */
+    /* border-radius: 30px 0px 0px 30px; */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: bottom right;
+    z-index: 150;
+}
+
+.sidebar .logo {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 2.5rem;
+}
+
+.sidebar .profile {
+    margin-top: 2rem;
+    text-align: center;
+    background: #f6fbfe;
+    padding: 16px 0;
+}
+
+.sidebar .routes-list {
+    margin-top: 2rem;
+    position: absolute;
+    top: 8rem;
+}
+
+.sidebar .routes-list .route {
+    display: block;
+    padding: 16px 24px;
+    padding-right: 100px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #777986;
+    transition: all 0.2s ease;
+}
+
+.sidebar .routes-list:hover {
+    border-right: 8px solid var(--main);
+    border-radius: 5px;
+    color: var(--text);
+}
+
+
+
+
+.active-link {
+    border-right: 8px solid var(--main);
+    border-radius: 5px;
+    color: var(--text) !important;
+}

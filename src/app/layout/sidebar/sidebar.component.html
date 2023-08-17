@@ -1,0 +1,21 @@
+<aside class="sidebar">
+    <div class="logo">
+        <div>
+            <img src="assets/icons/flag.png" height="55" alt="">
+        </div>
+    </div>
+    <!-- <div class="profile">
+        <div>
+            <img src="assets/images/icons/profile.svg" alt="profile" />
+            <div class="py-3">محمد مصطفي</div>
+            <div class="text-600">مدير مشاريع</div>
+        </div>
+    </div> -->
+    <div class="routes-list">
+        <a class="route" *ngFor="let route of routes" routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/'+route.path]">
+            <!-- <img [src]="route.icon" /> -->
+            <span class="route-name">{{ route.name }}</span>
+        </a>
+    </div>
+</aside>
