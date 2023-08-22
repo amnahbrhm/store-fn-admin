@@ -7,6 +7,10 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { ConfirmPopupModule } from 'primeng/confirmpopup'; 
+
 const routes: Routes = [
   {
     path: '',
@@ -30,6 +34,9 @@ const routes: Routes = [
     DialogModule,
     ReactiveFormsModule,
     FileUploadModule,
+    InputTextModule,
+    TableModule,
+    ConfirmPopupModule,
     RouterModule.forChild(routes)
   ]
 })

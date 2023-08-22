@@ -1,41 +1,138 @@
 <button pButton (click)="showDialog()" label="Add Product" class="p-button-success"></button>
-<!-- 
-<div class="flex justify-content-center mb-3">
-    <p-selectButton [options]="sizes" [(ngModel)]="selectedSize" [multiple]="false" optionLabel="name" optionValue="class"></p-selectButton>
+<p-confirmPopup></p-confirmPopup>
+<div class="">
+    <!-- <p-selectButton [options]="sizes" [(ngModel)]="selectedSize" [multiple]="false" optionLabel="name" optionValue="class"></p-selectButton> -->
+    <p-table [value]="products" [paginator]="true" [rows]="2" [totalRecords]="hasNextPage" (onPage)="loadmore($event)">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr (click)="getProduct(product._id)">
+                <td>{{ product._id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description}}</td>
+                <td>{{ product.description}}</td>
+                <td>
+                    <button pButton (click)="showDialog(false, true)" label="Edit" class="p-button-success"></button>
+                    <button pButton (click)="showDialog(false)" label="View" class="p-button-success"></button>
+                    <button pButton (click)="confirm($event)" label="Delete" class="p-button-success"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="4">No items found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <!-- <button *ngIf="hasNextPage" pButton (click)="loadmore()" label="Load More" class="p-button-success"></button> -->
 </div>
-<p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }" [styleClass]="selectedSize.class">
-    <ng-template pTemplate="header">
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-product>
-        <tr>
-            <td>{{ product.code }}</td>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.quantity }}</td>
-        </tr>
-    </ng-template>
-</p-table> -->
 
-<p-dialog header="Header" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+<p-dialog header="Add Item" [(visible)]="addVisible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+    [draggable]="false" [resizable]="false">
+
+    <form [formGroup]="form">
+        <div class="card">
+            <div class="field">
+                <label for="firstname1">Name</label>
+                <input pInputText
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    type="text" formControlName="name" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">Description</label>
+                <input pInputText type="text"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    formControlName="description" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">price</label>
+                <input pInputText type="text"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    formControlName="price" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">quantity</label>
+                <input pInputText type="text"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    formControlName="quantity" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">image</label>
+                <p-fileUpload mode="basic" accept="image/*" (onSelect)="onBasicUploadAuto($event)" [auto]="false"
+                    chooseLabel="Browse"></p-fileUpload>
+            </div>
+        </div>
+        <div class="flex align-items-center justify-content-center">
+            <button pButton (click)="submit()" label="Add Product" class="p-button-success"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header="View Item" [(visible)]="viewVisible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+    [draggable]="false" [resizable]="false">
+    <span>
+        <p>
+            Name: {{selectedProduct?.name}}
+        </p>
+        <p>
+            Description: {{selectedProduct?.description}}
+        </p>
+        <p>
+            Price: {{selectedProduct?.price}}
+        </p>
+        <p>
+            Quantity: {{selectedProduct?.quantity}}
+        </p>
+        <p>
+            image: {{selectedProduct?.img}}
+            <img [src]="'http://localhost:3000/api/items/image/'+selectedProduct?.img " alt="">
+        </p>
+    </span>
+</p-dialog>
+
+<p-dialog header="Edit Item" [(visible)]="editVisible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
     [draggable]="false" [resizable]="false">
     <form [formGroup]="form">
-        <input pInputText type="text" formControlName="name" placeholder="Normal" />
-
-        <input pInputText type="text" formControlName="description" placeholder="Normal" />
-
-        <input pInputText type="text" formControlName="price" placeholder="Normal" />
-        <input pInputText type="text" formControlName="quantity" placeholder="Normal" />
-        <!-- <input pInputText type="file" img="price" placeholder="Normal" /> -->
-
-        <p-fileUpload mode="basic" accept="image/*"  (onUpload)="onBasicUploadAuto($event)"
-            [auto]="false" chooseLabel="Browse"></p-fileUpload>
+        <div class="card">
+            <div class="field">
+                <label for="firstname1">Name</label>
+                <input pInputText
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    type="text" formControlName="name" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">Description</label>
+                <input pInputText type="text"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    formControlName="description" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">price</label>
+                <input pInputText type="text"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    formControlName="price" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">quantity</label>
+                <input pInputText type="text"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    formControlName="quantity" placeholder="" />
+            </div>
+            <div class="field">
+                <label for="lastname1">image</label>
+                <p-fileUpload mode="basic" accept="image/*" (onSelect)="onBasicUploadAuto($event)" [auto]="false"
+                    chooseLabel="Browse"></p-fileUpload>
+            </div>
+        </div>
+        <div class="flex align-items-center justify-content-center">
+            <button pButton (click)="editItem()" label="Edit Product" class="p-button-success"></button>
+        </div>
     </form>
-    <button pButton (click)="submit()" label="Add Product" class="p-button-success"></button>
-
 </p-dialog>

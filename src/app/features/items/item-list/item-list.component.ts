@@ -1,19 +1,30 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { FileUploadEvent } from 'primeng/fileupload';
+import { FileSelectEvent, FileUploadEvent } from 'primeng/fileupload';
 import { objectToFormData } from 'src/shared/functions/object-to-formdata';
-
+import { ItemsService } from '../items.service';
+import { ConfirmationService } from 'primeng/api';
+import { TablePageEvent } from 'primeng/table';
 @Component({
   selector: 'app-item-list',
   templateUrl: './item-list.component.html',
-  styleUrls: ['./item-list.component.css']
+  styleUrls: ['./item-list.component.css'],
+  providers: [ConfirmationService]
 })
 export class ItemListComponent {
-  // products!: Product[];
-  visible: boolean = false;
-
-  showDialog() {
-    this.visible = true;
+  addVisible: boolean = false;
+  viewVisible: boolean = false;
+  editVisible: boolean = false;
+  products: any[] = []
+  page: number = 1;
+  selectedProduct: any;
+  hasNextPage: any;
+  showDialog(add: boolean = true, edit: boolean = false) {
+    if (edit) {
+      this.editVisible = true
+      return
+    }
+      add ? (this.addVisible = true, this.form.reset) : (this.viewVisible = true);
   }
   sizes!: any[];
   form: FormGroup = new FormGroup({
@@ -24,19 +35,14 @@ export class ItemListComponent {
     img: new FormControl(null)
   })
   formData = new FormData();
-  selectedSize: any = '';
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private confirmationService: ConfirmationService, private service: ItemsService, private fb: FormBuilder) { }
 
   ngOnInit() {
-    // this.productService.getProductsMini().then((data) => {
-    //     this.products = data;
-    // });
-    this.sizes = [
-      { name: 'Small', class: 'p-datatable-sm' },
-      { name: 'Normal', class: '' },
-      { name: 'Large', class: 'p-datatable-lg' }
-    ];
+    this.service.getProduct({ pagination: 2, page: 1 }).subscribe((data: any) => {
+      this.products = data['items'] as [];
+      this.hasNextPage = data['hasNextPage'];
+    });
   }
   submit() {
     const formData = objectToFormData(this.form.value)
@@ -44,15 +50,69 @@ export class ItemListComponent {
     formData.forEach((element: any) => {
       console.log(element);
     });
-
-
+    this.service.addProduct(formData).subscribe(data => {
+      next: {
+        console.log(data);
+      }
+    })
   }
-  onBasicUploadAuto(event: any) {
-    console.log('hey');
+  editItem(){
+    const formData = objectToFormData(this.form.value)
+    console.log(this.form.value);
+    formData.forEach((element: any) => {
+      console.log(element);
+    });
+    this.service.editProduct(formData, this.selectedProduct._id).subscribe(data => {
+      next: {
+        console.log(data);
+      }
+    })
+  }
+  loadmore(event: TablePageEvent) {
+    console.log(event);
     
-    // this.form.patchValue({ img: event.files[0] })
-    // console.log(this.form);
-    
+    // event.rows
+    this.page = event.first/2
+    this.service.getProduct({ pagination: 2, page: this.page }).subscribe((data: any) => {
+      this.products = this.products.concat(data['items'] as []);
+      this.hasNextPage = data['hasNextPage'];
+      console.log(this.products);
+    });
+  }
+  confirm(event: Event) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: 'Are you sure that you want to proceed?',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.service.deleteProduct(this.selectedProduct._id).subscribe((data: any) => {
+           
+            console.log(this.products);
+          });
+            // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
+        },
+        reject: () => {
+            // this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+        }
+    });
+}
+  getProduct(id: string) {
+    this.service.getProduct({ id }).subscribe((data: object) => {
+      this.selectedProduct = data
+      for (const property in this.selectedProduct) {
+        this.form.controls[property] ? 
+        this.form.controls[property].setValue(this.selectedProduct[property])
+        : ''
+        console.log(`${property}: ${this.selectedProduct[property]}`);
+      }
+      // this.selectedProduct.map((element: any)=> {        
+      //   // this.form.controls[element]
+      // })
+      // this.showDialog(false)
+    });
+  }
+  onBasicUploadAuto(event: FileSelectEvent) {
+    this.form.patchValue({ img: event.files[0] })
     // this.form.controls['img'].updateValueAndValidity()
     // const file: File = event.files[0];
     // if (file) {
