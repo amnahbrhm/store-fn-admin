@@ -1,1 +1,33 @@
-<p>user-list works!</p>
+<div class="flex align-items-center justify-content-between pb-3">
+    <h1>Users List</h1>
+    <!-- <button pButton (click)="showDialog()" label="Add Product" class="p-button-success"></button> -->
+</div>
+<div class="flex flex-wrap gap-4">
+    <ng-container *ngFor="let user of list">
+
+        <div class="user-card">
+            <!-- <div class="header">
+                <p>
+                </p>
+            </div> -->
+            <div class="pl-3 pr-3 pt-5">
+                <div class="text-xs flex justify-content-between">
+                    Role: {{user.role}}
+                    <!-- <i>Change Role</i> -->
+                    <i class="pi pi-ellipsis-v" (click)="menu.toggle($event); selectedUser = user"></i>
+                </div>
+                <div class="text-sm pt-3 pb-3">
+                    Name: {{user.user_name}}
+                </div>
+                <div class="text-sm">
+                    Email: {{user.email}}
+                </div>
+            </div>
+            <div class="footer">
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<p-menu #menu [model]="items" appendTo="body" [popup]="true"></p-menu>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>

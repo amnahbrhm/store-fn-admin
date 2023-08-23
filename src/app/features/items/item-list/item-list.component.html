@@ -1,27 +1,34 @@
-<button pButton (click)="showDialog()" label="Add Product" class="p-button-success"></button>
-<p-confirmPopup></p-confirmPopup>
+<div class="flex align-items-center justify-content-between pb-3">
+    <h1>Products List</h1>
+    <button pButton (click)="showDialog()" label="Add Product" class="p-button-success"></button>
+</div>
+
+
 <div class="">
     <!-- <p-selectButton [options]="sizes" [(ngModel)]="selectedSize" [multiple]="false" optionLabel="name" optionValue="class"></p-selectButton> -->
-    <p-table [value]="products" [paginator]="true" [rows]="2" [totalRecords]="hasNextPage" (onPage)="loadmore($event)">
+    <p-table [totalRecords]="rowsCount" [value]="products" [paginator]="true"  [rows]="pagination"
+    [selectionPageOnly]="true" [lazy]="true"
+        (onLazyLoad)="loadmore($event)">
         <ng-template pTemplate="header">
             <tr>
-                <th>Code</th>
+                <th>Code </th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Quantity</th>
-                <th></th>
+                <th>Options</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-product>
+        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
             <tr (click)="getProduct(product._id)">
-                <td>{{ product._id }}</td>
+                <td>{{ rowIndex +1 }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description}}</td>
                 <td>{{ product.description}}</td>
                 <td>
-                    <button pButton (click)="showDialog(false, true)" label="Edit" class="p-button-success"></button>
+                    <i class="pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
+                    <!-- <button pButton (click)="showDialog(false, true)" label="Edit" class="p-button-success"></button>
                     <button pButton (click)="showDialog(false)" label="View" class="p-button-success"></button>
-                    <button pButton (click)="confirm($event)" label="Delete" class="p-button-success"></button>
+                    <button pButton (click)="confirm($event)" label="Delete" class="p-button-success"></button> -->
                 </td>
             </tr>
         </ng-template>
@@ -91,7 +98,6 @@
             Quantity: {{selectedProduct?.quantity}}
         </p>
         <p>
-            image: {{selectedProduct?.img}}
             <img [src]="'http://localhost:3000/api/items/image/'+selectedProduct?.img " alt="">
         </p>
     </span>
@@ -136,3 +142,9 @@
         </div>
     </form>
 </p-dialog>
+
+
+<!-- <p-confirmPopup></p-confirmPopup> -->
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+
+<p-menu #menu [model]="items" appendTo="body" [popup]="true"></p-menu>

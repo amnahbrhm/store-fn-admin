@@ -3,8 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { FileSelectEvent, FileUploadEvent } from 'primeng/fileupload';
 import { objectToFormData } from 'src/shared/functions/object-to-formdata';
 import { ItemsService } from '../items.service';
-import { ConfirmationService } from 'primeng/api';
-import { TablePageEvent } from 'primeng/table';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
 @Component({
   selector: 'app-item-list',
   templateUrl: './item-list.component.html',
@@ -15,16 +15,19 @@ export class ItemListComponent {
   addVisible: boolean = false;
   viewVisible: boolean = false;
   editVisible: boolean = false;
+  items: MenuItem[] | undefined;
+
   products: any[] = []
   page: number = 1;
+  pagination: number = 7
   selectedProduct: any;
-  hasNextPage: any;
+  rowsCount: number = 0;
   showDialog(add: boolean = true, edit: boolean = false) {
     if (edit) {
       this.editVisible = true
       return
     }
-      add ? (this.addVisible = true, this.form.reset) : (this.viewVisible = true);
+    add ? (this.addVisible = true, this.form.reset) : (this.viewVisible = true);
   }
   sizes!: any[];
   form: FormGroup = new FormGroup({
@@ -39,10 +42,29 @@ export class ItemListComponent {
   constructor(private confirmationService: ConfirmationService, private service: ItemsService, private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.service.getProduct({ pagination: 2, page: 1 }).subscribe((data: any) => {
-      this.products = data['items'] as [];
-      this.hasNextPage = data['hasNextPage'];
-    });
+    this.items = [
+      {
+        label: 'Update',
+        icon: 'pi pi-refresh',
+        command: () => {
+          this.showDialog(false, true)
+        }
+      },
+      {
+        label: 'View',
+        icon: 'pi pi-stop',
+        command: () => {
+          this.showDialog(false);
+        }
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-times',
+        command: () => {
+          this.confirm();
+        }
+      }
+    ];
   }
   submit() {
     const formData = objectToFormData(this.form.value)
@@ -52,11 +74,12 @@ export class ItemListComponent {
     });
     this.service.addProduct(formData).subscribe(data => {
       next: {
-        console.log(data);
+        this.loadmore()
+        this.addVisible = false
       }
     })
   }
-  editItem(){
+  editItem() {
     const formData = objectToFormData(this.form.value)
     console.log(this.form.value);
     formData.forEach((element: any) => {
@@ -64,65 +87,43 @@ export class ItemListComponent {
     });
     this.service.editProduct(formData, this.selectedProduct._id).subscribe(data => {
       next: {
-        console.log(data);
+        this.loadmore()
+        this.editVisible = false
       }
     })
   }
-  loadmore(event: TablePageEvent) {
-    console.log(event);
-    
+  loadmore(event?: TableLazyLoadEvent) {
+
     // event.rows
-    this.page = event.first/2
-    this.service.getProduct({ pagination: 2, page: this.page }).subscribe((data: any) => {
-      this.products = this.products.concat(data['items'] as []);
-      this.hasNextPage = data['hasNextPage'];
-      console.log(this.products);
+    event && (this.page = Math.round((event.first! + 1) / this.pagination))
+    this.service.getProduct({ pagination: this.pagination, page: this.page }).subscribe((data: any) => {
+      this.products = (data['items'] as []);
+      this.rowsCount = data['rowsCount'];
     });
   }
-  confirm(event: Event) {
+  confirm() {
     this.confirmationService.confirm({
-        target: event.target as EventTarget,
-        message: 'Are you sure that you want to proceed?',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-          this.service.deleteProduct(this.selectedProduct._id).subscribe((data: any) => {
-           
-            console.log(this.products);
-          });
-            // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
-        },
-        reject: () => {
-            // this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
-        }
+      message: `Are you sure that you want to delete item ${this.selectedProduct.name} ?`,
+      header: `Delete ${this.selectedProduct.name}`,
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.service.deleteProduct(this.selectedProduct._id).subscribe((data: any) => {
+          this.loadmore()
+        });
+      },
+      reject: () => {
+      }
     });
-}
+  }
   getProduct(id: string) {
     this.service.getProduct({ id }).subscribe((data: object) => {
       this.selectedProduct = data
       for (const property in this.selectedProduct) {
-        this.form.controls[property] ? 
-        this.form.controls[property].setValue(this.selectedProduct[property])
-        : ''
-        console.log(`${property}: ${this.selectedProduct[property]}`);
+        this.form.controls[property] && this.form.controls[property].setValue(this.selectedProduct[property])
       }
-      // this.selectedProduct.map((element: any)=> {        
-      //   // this.form.controls[element]
-      // })
-      // this.showDialog(false)
     });
   }
   onBasicUploadAuto(event: FileSelectEvent) {
     this.form.patchValue({ img: event.files[0] })
-    // this.form.controls['img'].updateValueAndValidity()
-    // const file: File = event.files[0];
-    // if (file) {
-    //   const fileName = file.name;
-    //   const formData = new FormData()
-    //   formData.append("img", file, fileName);
-    //   formData.forEach((element: any) => {
-    //     console.log(element);
-    //   });
-    //   // console.log(formData.getAll());
-    // }
   }
 }

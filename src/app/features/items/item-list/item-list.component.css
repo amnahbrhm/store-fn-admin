@@ -1,0 +1,13 @@
+img {
+    height: 250px;
+}
+
+
+
+/* :.p-button { */
+    ::ng-deep .p-button {
+        border: 1px solid rgb(164, 16, 16);
+        background: rgb(164, 16, 16);
+    }
+  /* } */
+  

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserAddComponent } from './user-add/user-add.component';
 import { RouterModule, Routes } from '@angular/router';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MenuModule } from 'primeng/menu';
 
 const routes: Routes = [
   {
@@ -23,6 +25,8 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
+    ConfirmDialogModule,
+    MenuModule,
     RouterModule.forChild(routes)
   ]
 })

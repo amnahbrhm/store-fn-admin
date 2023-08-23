@@ -9,8 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { ConfirmPopupModule } from 'primeng/confirmpopup'; 
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog'; import { MenuModule } from 'primeng/menu';
 const routes: Routes = [
   {
     path: '',
@@ -36,7 +35,8 @@ const routes: Routes = [
     FileUploadModule,
     InputTextModule,
     TableModule,
-    ConfirmPopupModule,
+    ConfirmDialogModule,
+    MenuModule,
     RouterModule.forChild(routes)
   ]
 })

@@ -1,0 +1,31 @@
+.user-card {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    flex-direction: column;
+    height: 200px;
+    width: 250px;
+    /* background: red; */
+    border: 0.5px solid rgb(208, 208, 208);
+    border-radius: 16px;
+}
+.user-card .header {
+    display: flex;
+    /* align-items:self-start; */
+    /* justify-content:flex-start; */
+    height: 15px;
+    width: 100%;
+    /* top: 0; */
+    border-radius: 16px 16px 0 0 ;
+    background-color: initial;
+    /* background: rgb(208, 208, 208); */
+}
+.user-card .footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 100%;
+    border-radius: 0 0 16px 16px ;
+    background: url('src/assets/images/bg.jpg');
+}
