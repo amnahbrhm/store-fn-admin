@@ -6,14 +6,16 @@ import { HttpService } from 'src/shared/services/http.service';
 })
 export class AuthService {
 
-  loggedIn: boolean = false;
+  private loggedIn: boolean = false;
   constructor(private http: HttpService) { }
 
   login(obj: object) {
     return this.http.post('auth/login', obj)
   }
-  isLoggedIn() {
+  get isLoggedIn() {
     return this.loggedIn;
   }
-
+  set isLoggedIn(loggedIn: boolean) {
+    this.loggedIn = loggedIn
+  }
 }

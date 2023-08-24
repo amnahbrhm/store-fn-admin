@@ -16,13 +16,13 @@ const routes: Routes = [
   {
     path: 'items',
     component: AppLayoutComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
     loadChildren: () => import('src/app/features/items/items.module').then((m)=> m.ItemsModule),
   },
   {
     path: 'users',
     component: AppLayoutComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
     loadChildren: () => import('src/app/features/users/users.module').then((m)=> m.UsersModule),
   }
 ];

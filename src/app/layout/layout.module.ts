@@ -11,6 +11,7 @@ import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarModule } from 'primeng/sidebar';
+import { MenuModule } from 'primeng/menu';
 @NgModule({
   declarations: [
     AppLayoutComponent,
@@ -25,7 +26,8 @@ import { SidebarModule } from 'primeng/sidebar';
     ButtonModule,
     DividerModule,
     InputTextModule,
-    SidebarModule
+    SidebarModule,
+    MenuModule
   ]
 })
 export class LayoutModule { }

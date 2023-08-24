@@ -19,7 +19,7 @@ export class LoginComponent {
     this.authService.login(this.form.value).subscribe((data: any) => {
       next: {
         console.log(data);
-        this.authService.loggedIn = true
+        this.authService.isLoggedIn = true
         localStorage.setItem('token', data['token'])
         this.router.navigateByUrl('items')
       }

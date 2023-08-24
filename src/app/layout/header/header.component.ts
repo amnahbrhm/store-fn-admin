@@ -1,5 +1,7 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { AuthService } from 'src/app/core/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +12,8 @@ export class HeaderComponent implements OnInit {
   items: MenuItem[] = [];
 
   activeItem!: MenuItem;
-
+  options: { label: string; icon: string; command: () => void; }[] = [];
+  constructor(private router: Router, private auth: AuthService){}
   ngOnInit() {
     this.items = [
       {
@@ -38,8 +41,24 @@ export class HeaderComponent implements OnInit {
         icon: 'pi pi-fw pi-home'
       },
     ];
+    this.options = [
+      {
+        label: 'Logout',
+        icon: 'pi pi-refresh',
+        command: () => {
+          // this.confirm('role-change')
+          this.logout()
+        }
+      
+      }
+    ];
 
     this.activeItem = this.items[0];
+  }
+  logout() {
+    localStorage.removeItem('token')
+    this.auth.isLoggedIn = false
+    this.router.navigate(['/'])
   }
 
   onActiveItemChange(event: any) {

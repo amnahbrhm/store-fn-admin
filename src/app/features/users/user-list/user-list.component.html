@@ -3,7 +3,7 @@
     <!-- <button pButton (click)="showDialog()" label="Add Product" class="p-button-success"></button> -->
 </div>
 <div class="flex flex-wrap gap-4">
-    <ng-container *ngFor="let user of list">
+    <ng-container *ngFor="let user of list; let i = index">
 
         <div class="user-card">
             <!-- <div class="header">
@@ -14,7 +14,7 @@
                 <div class="text-xs flex justify-content-between">
                     Role: {{user.role}}
                     <!-- <i>Change Role</i> -->
-                    <i class="pi pi-ellipsis-v" (click)="menu.toggle($event); selectedUser = user"></i>
+                    <i class="pi pi-ellipsis-v" (click)="menu.toggle($event); selectedUser = user; index = i"></i>
                 </div>
                 <div class="text-sm pt-3 pb-3">
                     Name: {{user.user_name}}
@@ -27,6 +27,9 @@
             </div>
         </div>
     </ng-container>
+</div>
+<div class="pt-5">
+    <button pButton *ngIf="hasNextPage" (click)="loadUsers()" label="Load more" class="p-button-success"></button>
 </div>
 
 <p-menu #menu [model]="items" appendTo="body" [popup]="true"></p-menu>

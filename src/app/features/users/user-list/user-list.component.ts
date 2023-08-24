@@ -14,7 +14,10 @@ export class UserListComponent implements OnInit {
   list: any[] = []
   items: MenuItem[] | undefined;
   selectedUser: any
+  index: number = -1 
   hasNextPage: boolean = false
+  pagination: number = 6
+  page: number = 1
   ngOnInit() {
     this.loadUsers()
     this.items = [
@@ -23,7 +26,6 @@ export class UserListComponent implements OnInit {
         icon: 'pi pi-refresh',
         command: () => {
           this.confirm('role-change')
-          // this.showDialog(false, true)
         }
       },
       {
@@ -36,15 +38,15 @@ export class UserListComponent implements OnInit {
     ];
   }
   loadUsers() {
-    this.service.getUsers({ pagination: 1, page: 1 }).subscribe((data: any) => {
-      this.list = (data['users'] as []);
+    this.service.getUsers({ pagination: this.pagination, page: this.page }).subscribe((data: any) => {
+      this.list = [...this.list, ...(data['users'] as [])];
       this.hasNextPage = data['hasNextPage'];
+      this.page++
     });
   }
   confirm(type: 'delete' | 'role-change') {
     type === 'delete' && this.deleteUser()
     type === 'role-change' && this.changeRole()
-
   }
   deleteUser() {
     this.confirmationService.confirm({
@@ -52,9 +54,8 @@ export class UserListComponent implements OnInit {
       header: `Delete User`,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        // id
         this.service.delete({ id: this.selectedUser._id }).subscribe((data: any) => {
-          this.loadUsers()
+          this.list.splice(this.index, 1)
         });
       },
       reject: () => {
@@ -67,10 +68,9 @@ export class UserListComponent implements OnInit {
       header: `Change Role`,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        // id, role
         const role = this.selectedUser.role === 'admin' ? 'user' : 'admin'
         this.service.changeRole({ id: this.selectedUser._id, role }).subscribe((data: any) => {
-          this.loadUsers()
+          this.list[this.index].role = role 
         });
       },
       reject: () => {
