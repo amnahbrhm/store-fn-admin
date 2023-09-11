@@ -93,8 +93,6 @@ export class ItemListComponent {
     })
   }
   loadmore(event?: TableLazyLoadEvent) {
-
-    // event.rows
     event && (this.page = Math.round((event.first! + 1) / this.pagination))
     this.service.getProduct({ pagination: this.pagination, page: this.page }).subscribe((data: any) => {
       this.products = (data['items'] as []);

@@ -10,12 +10,12 @@ export class SidebarComponent implements OnInit {
     constructor() { }
     routes = [
         {
-          path: 'items',
+          path: 'admin/items',
           name: 'Products',
           icon: 'assets/images/icons/project.svg',
         },
         {
-          path: 'users',
+          path: 'admin/users',
           name: 'Users',
           icon: 'assets/images/icons/dashboard.svg',
         }

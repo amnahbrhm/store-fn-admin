@@ -5,22 +5,22 @@ import { AuthGuard } from 'src/shared/guard/auth.guard';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'auth',
+    path: 'admin',
+    redirectTo: 'admin/auth',
     pathMatch: 'full'
   },
   {
-    path: 'auth',
+    path: 'admin/auth',
     loadChildren: () => import('src/app/core/auth/auth.module').then((m)=> m.AuthModule)
   },
   {
-    path: 'items',
+    path: 'admin/items',
     component: AppLayoutComponent,
     canActivate: [AuthGuard],
     loadChildren: () => import('src/app/features/items/items.module').then((m)=> m.ItemsModule),
   },
   {
-    path: 'users',
+    path: 'admin/users',
     component: AppLayoutComponent,
     canActivate: [AuthGuard],
     loadChildren: () => import('src/app/features/users/users.module').then((m)=> m.UsersModule),

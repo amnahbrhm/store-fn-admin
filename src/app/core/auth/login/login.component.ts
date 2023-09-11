@@ -21,7 +21,7 @@ export class LoginComponent {
         console.log(data);
         this.authService.isLoggedIn = true
         localStorage.setItem('token', data['token'])
-        this.router.navigateByUrl('items')
+        this.router.navigateByUrl('admin/items')
       }
     })
     // this.authService.loggedIn = true
