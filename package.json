@@ -1,11 +1,11 @@
 {
   "name": "store-fn-admin",
-  "homepage": "/admin",
+  "homepage": "/admin/",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build  --configuration production --base-href=/admin/",
+    "start": "ng serve --serve-path /admin/",
+    "build": "ng build  --configuration production --base-href /admin/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
